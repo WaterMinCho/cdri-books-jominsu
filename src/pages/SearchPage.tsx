@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import BookList from '../components/books/BookList';
 import EmptyState from '../components/books/EmptyState';
 import ResultCount from '../components/books/ResultCount';
 import SearchBar from '../components/books/SearchBar';
 import useBookSearch from '../hooks/useBookSearch';
+import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import type { BookSearchParams } from '../types/book';
 
 const SearchPage = () => {
   const [keyword, setKeyword] = useState('');
   const [params, setParams] = useState<BookSearchParams>({ query: '' });
 
-  const { data } = useBookSearch(params);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useBookSearch(params);
 
   const books = data?.pages.flatMap((page) => page.documents) ?? [];
   const totalCount = data?.pages[0]?.meta.total_count ?? 0;
@@ -19,6 +20,12 @@ const SearchPage = () => {
   const searchAll = (query: string) => {
     setParams({ query });
   };
+
+  const loadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const loadMoreRef = useIntersectionObserver(loadMore, books.length > 0);
 
   return (
     <section>
@@ -34,7 +41,14 @@ const SearchPage = () => {
         label="도서 검색 결과"
         count={totalCount}
       />
-      {books.length === 0 ? <EmptyState message="검색된 결과가 없습니다." /> : <BookList books={books} />}
+      {books.length === 0 ? (
+        <EmptyState message="검색된 결과가 없습니다." />
+      ) : (
+        <>
+          <BookList books={books} />
+          <div ref={loadMoreRef} />
+        </>
+      )}
     </section>
   );
 };
