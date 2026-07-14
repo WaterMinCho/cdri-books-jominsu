@@ -67,3 +67,23 @@ export const BookIcon = ({ size = 80 }: IconProps) => {
     </svg>
   );
 };
+
+export const ChevronDownIcon = ({ size = 16, color = '#6D7582' }: IconProps) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+    >
+      <path
+        d="M4 6L8 10L12 6"
+        stroke={color}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
