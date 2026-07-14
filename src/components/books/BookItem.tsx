@@ -67,7 +67,7 @@ const BookItem = ({ book }: Props) => {
           <span>{book.authors.join(', ')}</span>
         </TitleGroup>
         <h3>책 소개</h3>
-        <p>{book.contents}</p>
+        <p>{book.contents ? `${book.contents}…` : '등록된 책 소개가 없습니다.'}</p>
       </Description>
       <Side>
         <Button
