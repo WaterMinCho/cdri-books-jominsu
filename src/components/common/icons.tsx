@@ -87,3 +87,22 @@ export const ChevronDownIcon = ({ size = 16, color = '#6D7582' }: IconProps) => 
     </svg>
   );
 };
+
+export const CloseIcon = ({ size = 20, color = '#222222' }: IconProps) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden
+    >
+      <path
+        d="M5 5L15 15M15 5L5 15"
+        stroke={color}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};

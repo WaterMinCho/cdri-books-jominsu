@@ -6,18 +6,21 @@ import ResultCount from '../components/books/ResultCount';
 import SearchBar from '../components/books/SearchBar';
 import useBookSearch from '../hooks/useBookSearch';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
+import useSearchHistory from '../hooks/useSearchHistory';
 import type { BookSearchParams } from '../types/book';
 
 const SearchPage = () => {
   const [keyword, setKeyword] = useState('');
   const [params, setParams] = useState<BookSearchParams>({ query: '' });
 
+  const { history, addHistory, removeHistory } = useSearchHistory();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useBookSearch(params);
 
   const books = data?.pages.flatMap((page) => page.documents) ?? [];
   const totalCount = data?.pages[0]?.meta.total_count ?? 0;
 
   const searchAll = (query: string) => {
+    addHistory(query);
     setParams({ query });
   };
 
@@ -35,6 +38,8 @@ const SearchPage = () => {
           value={keyword}
           onChange={setKeyword}
           onSearch={searchAll}
+          history={history}
+          onRemoveHistory={removeHistory}
         />
       </SearchRow>
       <ResultCount
