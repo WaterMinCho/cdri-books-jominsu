@@ -11,8 +11,9 @@ function load(): Book[] {
   }
 }
 
+// isbn이 비어있는 도서가 간혹 있어 제목+저자를 보조 키로 사용
 function bookKey(book: Book) {
-  return book.isbn;
+  return book.isbn || `${book.title}/${book.authors.join(',')}`;
 }
 
 const useWishlist = () => {
