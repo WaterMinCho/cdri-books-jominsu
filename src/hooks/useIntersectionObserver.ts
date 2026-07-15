@@ -11,7 +11,7 @@ const useIntersectionObserver = (onIntersect: () => void, enabled: boolean) => {
       (entries) => {
         if (entries[0].isIntersecting) onIntersect();
       },
-      { rootMargin: '0px' },
+      { rootMargin: '200px' },
     );
 
     observer.observe(target);
