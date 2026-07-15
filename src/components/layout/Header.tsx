@@ -24,11 +24,20 @@ const Wrapper = styled.header`
   align-items: center;
   height: 80px;
   padding: 0 40px;
+
+  @media (max-width: 768px) {
+    justify-content: space-between;
+    padding: 0 16px;
+  }
 `;
 
 const Logo = styled(Link)`
   font-size: 24px;
   font-weight: 700;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 const Nav = styled.nav`
@@ -37,6 +46,12 @@ const Nav = styled.nav`
   transform: translateX(-50%);
   display: flex;
   gap: 56px;
+
+  @media (max-width: 768px) {
+    position: static;
+    transform: none;
+    gap: 24px;
+  }
 `;
 
 const NavItem = styled(NavLink)`

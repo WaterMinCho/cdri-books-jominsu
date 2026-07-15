@@ -64,6 +64,7 @@ const SearchBar = ({ value, onChange, onSearch, history, onRemoveHistory }: Prop
 const Container = styled.div`
   position: relative;
   width: 480px;
+  max-width: 100%;
 `;
 
 const InputBox = styled.div<{ $open: boolean }>`

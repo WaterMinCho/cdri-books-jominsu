@@ -114,6 +114,10 @@ const SearchRow = styled.div`
   align-items: center;
   gap: 16px;
   margin-bottom: 24px;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
 `;
 
 const PopoverAnchor = styled.div`

@@ -138,6 +138,12 @@ const Row = styled.div`
   display: flex;
   align-items: center;
   padding: 16px 16px 16px 48px;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+  }
 `;
 
 const Thumbnail = styled.div`
@@ -160,6 +166,10 @@ const TitleGroup = styled.div`
   flex: 1;
   min-width: 0;
   padding: 0 32px 0 48px;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 
   strong {
     font-size: 18px;
@@ -191,6 +201,11 @@ const ExpandedRow = styled.div`
   display: flex;
   gap: 32px;
   padding: 24px 16px 40px 48px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 24px 16px;
+  }
 `;
 
 const LargeThumbnail = styled.div`
@@ -243,6 +258,10 @@ const Side = styled.div`
 
   > button:first-child {
     width: 115px;
+  }
+
+  @media (max-width: 768px) {
+    gap: 24px;
   }
 `;
 
