@@ -19,7 +19,7 @@ const SearchPage = () => {
 
   const { history, addHistory, removeHistory } = useSearchHistory();
   const { isLiked, toggleLike } = useWishlist();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useBookSearch(params);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useBookSearch(params);
 
   const books = data?.pages.flatMap((page) => page.documents) ?? [];
   const totalCount = data?.pages[0]?.meta.total_count ?? 0;
@@ -74,7 +74,11 @@ const SearchPage = () => {
         label="도서 검색 결과"
         count={totalCount}
       />
-      {books.length === 0 ? (
+      {isError ? (
+        <StatusText>검색 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.</StatusText>
+      ) : isLoading ? (
+        <StatusText>검색 중입니다…</StatusText>
+      ) : books.length === 0 ? (
         <EmptyState message="검색된 결과가 없습니다." />
       ) : (
         <>
@@ -83,6 +87,7 @@ const SearchPage = () => {
             isLiked={isLiked}
             onToggleLike={toggleLike}
           />
+          {isFetchingNextPage && <StatusText>불러오는 중…</StatusText>}
           <div ref={loadMoreRef} />
         </>
       )}
@@ -105,6 +110,13 @@ const SearchRow = styled.div`
 
 const PopoverAnchor = styled.div`
   position: relative;
+`;
+
+const StatusText = styled.p`
+  padding: 60px 0;
+  text-align: center;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
 export default SearchPage;
