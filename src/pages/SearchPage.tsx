@@ -19,7 +19,7 @@ const SearchPage = () => {
 
   const { history, addHistory, removeHistory } = useSearchHistory();
   const { isLiked, toggleLike } = useWishlist();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useBookSearch(params);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } = useBookSearch(params);
 
   const books = data?.pages.flatMap((page) => page.documents) ?? [];
   const totalCount = data?.pages[0]?.meta.total_count ?? 0;
@@ -75,7 +75,15 @@ const SearchPage = () => {
         count={totalCount}
       />
       {isError ? (
-        <StatusText>검색 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.</StatusText>
+        <ErrorState>
+          <p>검색 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.</p>
+          <Button
+            $size="sm"
+            onClick={() => refetch()}
+          >
+            다시 시도
+          </Button>
+        </ErrorState>
       ) : isLoading ? (
         <StatusText>검색 중입니다…</StatusText>
       ) : books.length === 0 ? (
@@ -117,6 +125,19 @@ const StatusText = styled.p`
   text-align: center;
   font-size: 14px;
   color: ${({ theme }) => theme.colors.text.secondary};
+`;
+
+const ErrorState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 60px 0;
+
+  p {
+    font-size: 14px;
+    color: ${({ theme }) => theme.colors.text.secondary};
+  }
 `;
 
 export default SearchPage;
