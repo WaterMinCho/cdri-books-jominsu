@@ -1,17 +1,20 @@
 import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import BookList from '../components/books/BookList';
+import DetailSearchPopover from '../components/books/DetailSearchPopover';
 import EmptyState from '../components/books/EmptyState';
 import ResultCount from '../components/books/ResultCount';
 import SearchBar from '../components/books/SearchBar';
+import { Button } from '../components/common/Button';
 import useBookSearch from '../hooks/useBookSearch';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import useSearchHistory from '../hooks/useSearchHistory';
-import type { BookSearchParams } from '../types/book';
+import type { BookSearchParams, SearchTarget } from '../types/book';
 
 const SearchPage = () => {
   const [keyword, setKeyword] = useState('');
   const [params, setParams] = useState<BookSearchParams>({ query: '' });
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
   const { history, addHistory, removeHistory } = useSearchHistory();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useBookSearch(params);
@@ -22,6 +25,12 @@ const SearchPage = () => {
   const searchAll = (query: string) => {
     addHistory(query);
     setParams({ query });
+    setPopoverOpen(false);
+  };
+
+  const searchByTarget = (target: SearchTarget, query: string) => {
+    setParams({ query, target });
+    setPopoverOpen(false);
   };
 
   const loadMore = useCallback(() => {
@@ -41,6 +50,21 @@ const SearchPage = () => {
           history={history}
           onRemoveHistory={removeHistory}
         />
+        <PopoverAnchor>
+          <Button
+            $variant="outline"
+            $size="sm"
+            onClick={() => setPopoverOpen((open) => !open)}
+          >
+            상세검색
+          </Button>
+          {popoverOpen && (
+            <DetailSearchPopover
+              onClose={() => setPopoverOpen(false)}
+              onSearch={searchByTarget}
+            />
+          )}
+        </PopoverAnchor>
       </SearchRow>
       <ResultCount
         label="도서 검색 결과"
@@ -69,6 +93,10 @@ const SearchRow = styled.div`
   align-items: center;
   gap: 16px;
   margin-bottom: 24px;
+`;
+
+const PopoverAnchor = styled.div`
+  position: relative;
 `;
 
 export default SearchPage;
