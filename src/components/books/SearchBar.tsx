@@ -29,7 +29,7 @@ const SearchBar = ({ value, onChange, onSearch, history, onRemoveHistory }: Prop
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') submit(value);
+            if (e.key === 'Enter' && !e.nativeEvent.isComposing) submit(value);
           }}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
