@@ -22,7 +22,7 @@ const useSearchHistory = () => {
   const addHistory = (keyword: string) => {
     const trimmed = keyword.trim();
     if (!trimmed) return;
-    save([trimmed, ...history].slice(0, MAX_HISTORY));
+    save([trimmed, ...history.filter((item) => item !== trimmed)].slice(0, MAX_HISTORY));
   };
 
   const removeHistory = (keyword: string) => {
