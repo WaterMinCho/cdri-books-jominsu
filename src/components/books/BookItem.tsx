@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import styled from 'styled-components';
 import type { Book } from '../../types/book';
 import formatPrice from '../../utils/format';
@@ -11,7 +11,8 @@ type Props = {
   onToggleLike: (book: Book) => void;
 };
 
-const BookItem = ({ book, liked, onToggleLike }: Props) => {
+// 무한 스크롤로 목록이 길어지므로 페이지 추가 로드 시 기존 아이템 리렌더를 막는다
+const BookItem = memo(({ book, liked, onToggleLike }: Props) => {
   const [expanded, setExpanded] = useState(false);
 
   const hasDiscount = book.sale_price > 0 && book.sale_price < book.price;
@@ -124,7 +125,7 @@ const BookItem = ({ book, liked, onToggleLike }: Props) => {
       </Side>
     </ExpandedRow>
   );
-};
+});
 
 const LikeButton = styled.button`
   position: absolute;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { Book } from '../types/book';
 
 const STORAGE_KEY = 'certicos-books/wishlist';
@@ -24,15 +24,15 @@ const useWishlist = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   };
 
-  const isLiked = (book: Book) => wishlist.some((item) => bookKey(item) === bookKey(book));
+  const isLiked = useCallback((book: Book) => wishlist.some((item) => bookKey(item) === bookKey(book)), [wishlist]);
 
-  const toggleLike = (book: Book) => {
-    if (isLiked(book)) {
-      save(wishlist.filter((item) => bookKey(item) !== bookKey(book)));
-    } else {
-      save([book, ...wishlist]);
-    }
-  };
+  const toggleLike = useCallback(
+    (book: Book) => {
+      const exists = wishlist.some((item) => bookKey(item) === bookKey(book));
+      save(exists ? wishlist.filter((item) => bookKey(item) !== bookKey(book)) : [book, ...wishlist]);
+    },
+    [wishlist],
+  );
 
   return { wishlist, isLiked, toggleLike };
 };
