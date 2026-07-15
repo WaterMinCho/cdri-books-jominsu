@@ -22,6 +22,7 @@ const SearchPage = () => {
   const books = data?.pages.flatMap((page) => page.documents) ?? [];
   const totalCount = data?.pages[0]?.meta.total_count ?? 0;
 
+  // 전체 검색과 상세 검색은 동시에 적용되지 않는다 (한쪽 실행 시 다른 쪽 조건 초기화)
   const searchAll = (query: string) => {
     addHistory(query);
     setParams({ query });
@@ -29,6 +30,7 @@ const SearchPage = () => {
   };
 
   const searchByTarget = (target: SearchTarget, query: string) => {
+    setKeyword('');
     setParams({ query, target });
     setPopoverOpen(false);
   };
