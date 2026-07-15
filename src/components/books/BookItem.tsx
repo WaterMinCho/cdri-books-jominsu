@@ -3,13 +3,15 @@ import styled from 'styled-components';
 import type { Book } from '../../types/book';
 import formatPrice from '../../utils/format';
 import { Button } from '../common/Button';
-import { ChevronDownIcon } from '../common/icons';
+import { ChevronDownIcon, HeartIcon } from '../common/icons';
 
 type Props = {
   book: Book;
+  liked: boolean;
+  onToggleLike: (book: Book) => void;
 };
 
-const BookItem = ({ book }: Props) => {
+const BookItem = ({ book, liked, onToggleLike }: Props) => {
   const [expanded, setExpanded] = useState(false);
 
   const hasDiscount = book.sale_price > 0 && book.sale_price < book.price;
@@ -18,6 +20,19 @@ const BookItem = ({ book }: Props) => {
   const openPurchasePage = () => {
     window.open(book.url, '_blank', 'noopener,noreferrer');
   };
+
+  const likeButton = (size: number) => (
+    <LikeButton
+      type="button"
+      aria-label={liked ? '찜 해제' : '찜하기'}
+      onClick={() => onToggleLike(book)}
+    >
+      <HeartIcon
+        size={size}
+        filled={liked}
+      />
+    </LikeButton>
+  );
 
   if (!expanded) {
     return (
@@ -30,6 +45,7 @@ const BookItem = ({ book }: Props) => {
               loading="lazy"
             />
           )}
+          {likeButton(16)}
         </Thumbnail>
         <TitleGroup>
           <strong>{book.title}</strong>
@@ -60,6 +76,7 @@ const BookItem = ({ book }: Props) => {
             loading="lazy"
           />
         )}
+        {likeButton(24)}
       </LargeThumbnail>
       <Description>
         <TitleGroup>
@@ -108,6 +125,13 @@ const BookItem = ({ book }: Props) => {
     </ExpandedRow>
   );
 };
+
+const LikeButton = styled.button`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+`;
 
 const Row = styled.div`
   display: flex;
@@ -178,6 +202,11 @@ const LargeThumbnail = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  button {
+    top: 8px;
+    right: 8px;
   }
 `;
 

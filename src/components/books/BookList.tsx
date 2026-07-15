@@ -4,14 +4,20 @@ import BookItem from './BookItem';
 
 type Props = {
   books: Book[];
+  isLiked: (book: Book) => boolean;
+  onToggleLike: (book: Book) => void;
 };
 
-const BookList = ({ books }: Props) => {
+const BookList = ({ books, isLiked, onToggleLike }: Props) => {
   return (
     <List>
       {books.map((book, index) => (
         <li key={`${book.isbn}-${index}`}>
-          <BookItem book={book} />
+          <BookItem
+            book={book}
+            liked={isLiked(book)}
+            onToggleLike={onToggleLike}
+          />
         </li>
       ))}
     </List>

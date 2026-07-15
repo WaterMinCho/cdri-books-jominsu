@@ -9,6 +9,7 @@ import { Button } from '../components/common/Button';
 import useBookSearch from '../hooks/useBookSearch';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import useSearchHistory from '../hooks/useSearchHistory';
+import useWishlist from '../hooks/useWishlist';
 import type { BookSearchParams, SearchTarget } from '../types/book';
 
 const SearchPage = () => {
@@ -17,6 +18,7 @@ const SearchPage = () => {
   const [popoverOpen, setPopoverOpen] = useState(false);
 
   const { history, addHistory, removeHistory } = useSearchHistory();
+  const { isLiked, toggleLike } = useWishlist();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useBookSearch(params);
 
   const books = data?.pages.flatMap((page) => page.documents) ?? [];
@@ -76,7 +78,11 @@ const SearchPage = () => {
         <EmptyState message="검색된 결과가 없습니다." />
       ) : (
         <>
-          <BookList books={books} />
+          <BookList
+            books={books}
+            isLiked={isLiked}
+            onToggleLike={toggleLike}
+          />
           <div ref={loadMoreRef} />
         </>
       )}
