@@ -1,50 +1,34 @@
-# React + TypeScript + Vite
+# certicos BOOKS
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+카카오 도서 검색 API를 활용한 도서 검색 서비스입니다. 도서를 검색해 목록으로 확인하고, 상세 정보 조회 / 구매 페이지 이동 / 찜하기를 할 수 있습니다.
 
-Currently, two official plugins are available:
+## 실행 방법
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm install
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- Node.js 18 이상 권장
+- 실행 전 프로젝트 루트에 `.env` 파일이 필요합니다. (제출 메일에 첨부된 `.env`를 루트에 두거나, `.env.example`을 참고해 카카오 REST API 키를 넣어주세요)
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
 ```
+VITE_KAKAO_REST_API_KEY=카카오_REST_API_키
+```
+
+- 실행 후 http://localhost:5173 에서 확인할 수 있습니다.
+
+## 라이브러리 선택 이유
+
+- **@tanstack/react-query** — 서버 상태(검색 결과)의 캐싱·페이지네이션·로딩 상태 관리를 직접 구현하지 않고 선언적으로 처리하기 위해 사용했습니다. 특히 `useInfiniteQuery`가 무한 스크롤 요구사항과 정확히 맞습니다.
+- **styled-components** — 컴포넌트 단위로 스타일을 캡슐화하고, 피그마의 컬러 팔레트를 ThemeProvider 토큰으로 관리하기 위해 선택했습니다.
+- **react-router-dom** — 도서 검색 / 내가 찜한 책 두 페이지 간 라우팅.
+- **axios** — 인스턴스에 baseURL과 인증 헤더를 한 번만 설정해 API 호출부를 단순하게 유지했습니다.
+
+## 강조하고 싶은 기능
+
+- **무한 스크롤** — 스크롤 이벤트 대신 IntersectionObserver를 사용해 목록 하단 감지 시 다음 10건을 불러옵니다. rootMargin으로 하단 도달 전에 미리 로드해 끊김을 줄였습니다.
+- **검색 기록** — 최대 8개, 중복 시 최신으로 갱신, 초과 시 오래된 순 삭제. 브라우저를 재시작해도 유지됩니다.
+- **상세 검색** — 제목/저자명/출판사 조건 선택 후 검색하면 카카오 API의 target 파라미터로 조건 검색을 수행합니다. 전체 검색과 상세 검색은 동시에 적용되지 않습니다.
+- **찜하기** — 목록/상세 어디서든 하트로 토글할 수 있고, 찜 목록 페이지도 10개 단위로 나눠 렌더링합니다.
+- **한글 입력 처리** — IME 조합 중 Enter가 중복 실행되지 않도록 `isComposing`을 확인합니다.
