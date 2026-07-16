@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import type { SearchTarget } from '../../types/book';
 import { Button } from '../common/Button';
+import { addToast } from '../common/Toast';
 import { ChevronDownIcon, CloseIcon } from '../common/icons';
 
 const TARGET_LABELS: Record<SearchTarget, string> = {
@@ -20,8 +21,11 @@ const DetailSearchPopover = ({ onClose, onSearch }: Props) => {
   const [keyword, setKeyword] = useState('');
   const [selectOpen, setSelectOpen] = useState(false);
 
-  const submit = () => {
-    if (!keyword.trim()) return;
+  const handleSubmit = () => {
+    if (!keyword.trim()) {
+      addToast('검색어를 입력해 주세요.');
+      return;
+    }
     onSearch(target, keyword.trim());
   };
 
@@ -67,7 +71,7 @@ const DetailSearchPopover = ({ onClose, onSearch }: Props) => {
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.nativeEvent.isComposing) submit();
+            if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleSubmit();
           }}
           placeholder="검색어 입력"
           autoFocus
@@ -75,7 +79,7 @@ const DetailSearchPopover = ({ onClose, onSearch }: Props) => {
       </Row>
       <Button
         $size="sm"
-        onClick={submit}
+        onClick={handleSubmit}
         style={{ width: '100%' }}
       >
         검색하기

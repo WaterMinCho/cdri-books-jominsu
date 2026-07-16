@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import type { Book } from '../../types/book';
 import formatPrice from '../../utils/format';
 import { Button } from '../common/Button';
+import { addToast } from '../common/Toast';
 import { ChevronDownIcon, HeartIcon } from '../common/icons';
 
 type Props = {
@@ -18,7 +19,11 @@ const BookItem = memo(({ book, liked, onToggleLike }: Props) => {
   const hasDiscount = book.sale_price > 0 && book.sale_price < book.price;
   const displayPrice = hasDiscount ? book.sale_price : book.price;
 
-  const openPurchasePage = () => {
+  const handlePurchaseClick = () => {
+    if (!book.url) {
+      addToast('구매 페이지 정보를 찾을 수 없어요.');
+      return;
+    }
     window.open(book.url, '_blank', 'noopener,noreferrer');
   };
 
@@ -54,7 +59,7 @@ const BookItem = memo(({ book, liked, onToggleLike }: Props) => {
         </TitleGroup>
         <Price>{formatPrice(displayPrice)}</Price>
         <Actions>
-          <Button onClick={openPurchasePage}>구매하기</Button>
+          <Button onClick={handlePurchaseClick}>구매하기</Button>
           <Button
             $variant="light"
             onClick={() => setExpanded(true)}
@@ -117,7 +122,7 @@ const BookItem = memo(({ book, liked, onToggleLike }: Props) => {
           )}
         </PriceTable>
         <Button
-          onClick={openPurchasePage}
+          onClick={handlePurchaseClick}
           style={{ width: 240 }}
         >
           구매하기

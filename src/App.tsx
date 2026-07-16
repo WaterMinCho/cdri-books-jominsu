@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
+import ToastContainer from './components/common/Toast';
 import Header from './components/layout/Header';
 import SearchPage from './pages/SearchPage';
 import WishlistPage from './pages/WishlistPage';
@@ -20,6 +21,7 @@ const App = () => {
           />
         </Routes>
       </Main>
+      <ToastContainer />
     </>
   );
 };
