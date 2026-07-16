@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import useDebounce from '../../hooks/useDebounce';
+import useSearchSuggestions from '../../hooks/useSearchSuggestions';
 import { CloseIcon, SearchIcon } from '../common/icons';
 
 type Props = {
@@ -12,7 +14,12 @@ type Props = {
 
 const SearchBar = ({ value, onChange, onSearch, history, onRemoveHistory }: Props) => {
   const [focused, setFocused] = useState(false);
-  const showHistory = focused && history.length > 0;
+  const debouncedValue = useDebounce(value, 300);
+  const suggestions = useSearchSuggestions(focused ? debouncedValue : '');
+
+  const showSuggestions = focused && value.trim().length > 0 && suggestions.length > 0;
+  const showHistory = focused && value.trim().length === 0 && history.length > 0;
+  const open = showSuggestions || showHistory;
 
   const submit = (keyword: string) => {
     if (!keyword.trim()) return;
@@ -23,7 +30,7 @@ const SearchBar = ({ value, onChange, onSearch, history, onRemoveHistory }: Prop
 
   return (
     <Container>
-      <InputBox $open={showHistory}>
+      <InputBox $open={open}>
         <SearchIcon />
         <input
           value={value}
@@ -36,26 +43,37 @@ const SearchBar = ({ value, onChange, onSearch, history, onRemoveHistory }: Prop
           placeholder="검색어를 입력하세요"
         />
       </InputBox>
-      {showHistory && (
-        <HistoryList onMouseDown={(e) => e.preventDefault()}>
-          {history.map((keyword) => (
-            <HistoryItem key={keyword}>
-              <button
-                type="button"
-                onClick={() => submit(keyword)}
-              >
-                {keyword}
-              </button>
-              <RemoveButton
-                type="button"
-                aria-label={`${keyword} 검색 기록 삭제`}
-                onClick={() => onRemoveHistory(keyword)}
-              >
-                <CloseIcon />
-              </RemoveButton>
-            </HistoryItem>
-          ))}
-        </HistoryList>
+      {open && (
+        <Dropdown onMouseDown={(e) => e.preventDefault()}>
+          {showSuggestions
+            ? suggestions.map((title) => (
+                <li key={title}>
+                  <SuggestionButton
+                    type="button"
+                    onClick={() => submit(title)}
+                  >
+                    {title}
+                  </SuggestionButton>
+                </li>
+              ))
+            : history.map((keyword) => (
+                <HistoryItem key={keyword}>
+                  <button
+                    type="button"
+                    onClick={() => submit(keyword)}
+                  >
+                    {keyword}
+                  </button>
+                  <RemoveButton
+                    type="button"
+                    aria-label={`${keyword} 검색 기록 삭제`}
+                    onClick={() => onRemoveHistory(keyword)}
+                  >
+                    <CloseIcon />
+                  </RemoveButton>
+                </HistoryItem>
+              ))}
+        </Dropdown>
       )}
     </Container>
   );
@@ -86,7 +104,7 @@ const InputBox = styled.div<{ $open: boolean }>`
   }
 `;
 
-const HistoryList = styled.ul`
+const Dropdown = styled.ul`
   position: absolute;
   top: 100%;
   width: 100%;
@@ -94,6 +112,22 @@ const HistoryList = styled.ul`
   background: ${({ theme }) => theme.colors.lightGray};
   border-radius: 0 0 24px 24px;
   z-index: 10;
+`;
+
+const SuggestionButton = styled.button`
+  display: block;
+  width: 100%;
+  padding: 8px 24px 8px 48px;
+  text-align: left;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.text.primary};
+  }
 `;
 
 const HistoryItem = styled.li`
