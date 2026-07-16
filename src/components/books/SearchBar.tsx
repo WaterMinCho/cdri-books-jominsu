@@ -136,10 +136,14 @@ const HistoryItem = styled.li`
 
   > button:first-child {
     flex: 1;
+    min-width: 0;
     padding: 8px 12px 8px 48px;
     text-align: left;
     font-size: 14px;
     color: ${({ theme }) => theme.colors.text.subtitle};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 

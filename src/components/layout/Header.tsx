@@ -25,7 +25,7 @@ const Wrapper = styled.header`
   height: 80px;
   padding: 0 40px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     justify-content: space-between;
     padding: 0 16px;
   }
@@ -35,7 +35,7 @@ const Logo = styled(Link)`
   font-size: 24px;
   font-weight: 700;
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     font-size: 18px;
   }
 `;
@@ -47,7 +47,7 @@ const Nav = styled.nav`
   display: flex;
   gap: 56px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     position: static;
     transform: none;
     gap: 24px;

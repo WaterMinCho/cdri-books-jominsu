@@ -85,7 +85,8 @@ const Item = styled.div<{ $closing: boolean }>`
   background: rgba(34, 34, 34, 0.9);
   color: ${({ theme }) => theme.colors.white};
   font-size: 14px;
-  white-space: nowrap;
+  max-width: calc(100vw - 40px);
+  text-align: center;
   opacity: ${({ $closing }) => ($closing ? 0 : 1)};
   transition: opacity 0.3s;
 `;

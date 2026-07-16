@@ -95,6 +95,12 @@ const Popover = styled.div`
   transform: translateX(-50%);
   width: 360px;
   padding: 36px 24px 24px;
+
+  @media (max-width: 768px) {
+    left: 0;
+    transform: none;
+    width: min(360px, calc(100vw - 40px));
+  }
   background: ${({ theme }) => theme.colors.white};
   border-radius: 8px;
   box-shadow: 0 4px 14px 6px rgba(151, 151, 151, 0.15);

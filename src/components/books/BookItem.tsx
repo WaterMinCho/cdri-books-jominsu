@@ -177,8 +177,12 @@ const TitleGroup = styled.div`
   }
 
   strong {
+    min-width: 0;
     font-size: 18px;
     font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   span {
@@ -191,6 +195,10 @@ const TitleGroup = styled.div`
 const Price = styled.strong`
   font-size: 18px;
   margin-right: 40px;
+
+  @media (max-width: 768px) {
+    margin-right: 12px;
+  }
 `;
 
 const Actions = styled.div`
