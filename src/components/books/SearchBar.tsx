@@ -21,10 +21,10 @@ const SearchBar = ({ value, onChange, onSearch, history, onRemoveHistory }: Prop
   const showHistory = focused && value.trim().length === 0 && history.length > 0;
   const open = showSuggestions || showHistory;
 
+  // 빈 검색어로 검색하면 이전 결과를 비우고 초기 화면으로 돌아간다
   const handleSubmit = (keyword: string) => {
-    if (!keyword.trim()) return;
     onChange(keyword);
-    onSearch(keyword);
+    onSearch(keyword.trim());
     setFocused(false);
   };
 
