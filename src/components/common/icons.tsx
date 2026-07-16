@@ -80,7 +80,7 @@ export const HeartIcon = ({ size = 24, filled = false }: IconProps & { filled?: 
       <path
         d="M12 20.3L4.9 13.4C3 11.5 3 8.5 4.9 6.7C6.7 4.9 9.6 4.9 11.4 6.7L12 7.3L12.6 6.7C14.4 4.9 17.3 4.9 19.1 6.7C21 8.5 21 11.5 19.1 13.4L12 20.3Z"
         fill={filled ? '#E84118' : 'rgba(0, 0, 0, 0.2)'}
-        stroke="#FFFFFF"
+        stroke={filled ? '#E84118' : '#FFFFFF'}
         strokeWidth="1.5"
         strokeLinejoin="round"
       />
