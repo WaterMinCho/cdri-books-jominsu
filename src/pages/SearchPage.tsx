@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import BookList from '../components/books/BookList';
 import DetailSearchPopover from '../components/books/DetailSearchPopover';
@@ -6,11 +6,14 @@ import EmptyState from '../components/books/EmptyState';
 import ResultCount from '../components/books/ResultCount';
 import SearchBar from '../components/books/SearchBar';
 import { Button } from '../components/common/Button';
+import { addToast } from '../components/common/Toast';
 import useBookSearch from '../hooks/useBookSearch';
+import useClickOutside from '../hooks/useClickOutside';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import useSearchHistory from '../hooks/useSearchHistory';
 import useWishlist from '../hooks/useWishlist';
 import type { BookSearchParams, SearchTarget } from '../types/book';
+import { getErrorMessage } from '../utils/error';
 
 const SearchPage = () => {
   const [keyword, setKeyword] = useState('');
@@ -19,29 +22,36 @@ const SearchPage = () => {
 
   const { history, addHistory, removeHistory } = useSearchHistory();
   const { isLiked, toggleLike } = useWishlist();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } = useBookSearch(params);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error, refetch } =
+    useBookSearch(params);
+
+  const popoverRef = useClickOutside<HTMLDivElement>(() => setPopoverOpen(false), popoverOpen);
 
   const books = data?.pages.flatMap((page) => page.documents) ?? [];
   const totalCount = data?.pages[0]?.meta.total_count ?? 0;
 
+  useEffect(() => {
+    if (isError) addToast(getErrorMessage(error));
+  }, [isError, error]);
+
   // 전체 검색과 상세 검색은 동시에 적용되지 않는다 (한쪽 실행 시 다른 쪽 조건 초기화)
-  const searchAll = (query: string) => {
+  const handleSearch = (query: string) => {
     addHistory(query);
     setParams({ query });
     setPopoverOpen(false);
   };
 
-  const searchByTarget = (target: SearchTarget, query: string) => {
+  const handleDetailSearch = (target: SearchTarget, query: string) => {
     setKeyword('');
     setParams({ query, target });
     setPopoverOpen(false);
   };
 
-  const loadMore = useCallback(() => {
+  const handleLoadMore = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const loadMoreRef = useIntersectionObserver(loadMore, books.length > 0);
+  const loadMoreRef = useIntersectionObserver(handleLoadMore, books.length > 0);
 
   return (
     <section>
@@ -50,11 +60,11 @@ const SearchPage = () => {
         <SearchBar
           value={keyword}
           onChange={setKeyword}
-          onSearch={searchAll}
+          onSearch={handleSearch}
           history={history}
           onRemoveHistory={removeHistory}
         />
-        <PopoverAnchor>
+        <PopoverAnchor ref={popoverRef}>
           <Button
             $variant="outline"
             $size="sm"
@@ -65,7 +75,7 @@ const SearchPage = () => {
           {popoverOpen && (
             <DetailSearchPopover
               onClose={() => setPopoverOpen(false)}
-              onSearch={searchByTarget}
+              onSearch={handleDetailSearch}
             />
           )}
         </PopoverAnchor>
