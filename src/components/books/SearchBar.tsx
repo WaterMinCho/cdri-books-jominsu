@@ -21,7 +21,7 @@ const SearchBar = ({ value, onChange, onSearch, history, onRemoveHistory }: Prop
   const showHistory = focused && value.trim().length === 0 && history.length > 0;
   const open = showSuggestions || showHistory;
 
-  const submit = (keyword: string) => {
+  const handleSubmit = (keyword: string) => {
     if (!keyword.trim()) return;
     onChange(keyword);
     onSearch(keyword);
@@ -36,7 +36,7 @@ const SearchBar = ({ value, onChange, onSearch, history, onRemoveHistory }: Prop
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.nativeEvent.isComposing) submit(value);
+            if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleSubmit(value);
           }}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
@@ -50,7 +50,7 @@ const SearchBar = ({ value, onChange, onSearch, history, onRemoveHistory }: Prop
                 <li key={title}>
                   <SuggestionButton
                     type="button"
-                    onClick={() => submit(title)}
+                    onClick={() => handleSubmit(title)}
                   >
                     {title}
                   </SuggestionButton>
@@ -60,7 +60,7 @@ const SearchBar = ({ value, onChange, onSearch, history, onRemoveHistory }: Prop
                 <HistoryItem key={keyword}>
                   <button
                     type="button"
-                    onClick={() => submit(keyword)}
+                    onClick={() => handleSubmit(keyword)}
                   >
                     {keyword}
                   </button>

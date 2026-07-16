@@ -14,11 +14,11 @@ const WishlistPage = () => {
   const books = wishlist.slice(0, visibleCount);
   const hasMore = wishlist.length > visibleCount;
 
-  const loadMore = useCallback(() => {
+  const handleLoadMore = useCallback(() => {
     setVisibleCount((count) => count + PAGE_SIZE);
   }, []);
 
-  const loadMoreRef = useIntersectionObserver(loadMore, hasMore);
+  const loadMoreRef = useIntersectionObserver(handleLoadMore, hasMore);
 
   return (
     <section>
