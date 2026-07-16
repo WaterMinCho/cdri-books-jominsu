@@ -45,19 +45,21 @@ const DetailSearchPopover = ({ onClose, onSearch }: Props) => {
           </SelectTrigger>
           {selectOpen && (
             <Options>
-              {(Object.keys(TARGET_LABELS) as SearchTarget[]).map((key) => (
-                <li key={key}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setTarget(key);
-                      setSelectOpen(false);
-                    }}
-                  >
-                    {TARGET_LABELS[key]}
-                  </button>
-                </li>
-              ))}
+              {(Object.keys(TARGET_LABELS) as SearchTarget[])
+                .filter((key) => key !== target)
+                .map((key) => (
+                  <li key={key}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTarget(key);
+                        setSelectOpen(false);
+                      }}
+                    >
+                      {TARGET_LABELS[key]}
+                    </button>
+                  </li>
+                ))}
             </Options>
           )}
         </SelectBox>
